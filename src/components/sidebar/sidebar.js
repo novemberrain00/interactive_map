@@ -106,7 +106,7 @@ const Sidebar = () => {
                             />
                         </Filter>
                         <Filter title="Остальные фильтры">
-                            <FilterButton text='ОКС'/>
+                            <FilterButton callback={() => setNewRequestUrl('/api/CapitalObject/list?Count=10&Offset=1')} text='ОКС'/>
                             <FilterButton text='Стартовые площадки'/>
                         </Filter>
                     </div>
