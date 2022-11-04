@@ -1,0 +1,50 @@
+@import './filter-variables.scss';
+
+.sidebar__filter {
+    position: relative;
+    margin-top: 20px;
+    z-index: 0;
+
+    &-icon {
+        margin-right: 6px;
+    }
+
+    &-opener {
+        position: absolute;
+        display: block;
+        right: 0;
+        width: 10px;
+        transition: .8s;
+
+        &_reversed {
+            transform: rotate(180deg);
+        }
+    }
+
+    &-title {
+        display: flex;
+        align-items: center;
+        font-size: 12px;
+        font-family: Roboto, sans-serif;
+        color: $info-text-color;
+        margin: 0;
+
+        &:hover {
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    }
+
+    &-links {
+        display: flex;
+        flex-wrap: wrap;
+        margin-top: 10px;
+        overflow: hidden;
+        max-height: 1000px;
+        transition: .8s ease;
+
+        &_closed {
+            max-height: 0px;
+        }
+    }
+}

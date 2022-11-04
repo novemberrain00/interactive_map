@@ -1,0 +1,33 @@
+.search-form {
+    display: flex;
+    position: absolute;
+    right: 30px;
+    top: 30px;
+
+    &__input {
+        width: 333px;
+        padding: 12.5px 10px;
+        border: none;
+        border-radius: 10px;
+        color: rgba(177, 177, 177, 1);
+        font-size: 16px;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    &__button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        background: #fff;
+        border: none;
+        margin-left: -45px;
+        
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}

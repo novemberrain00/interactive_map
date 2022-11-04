@@ -1,0 +1,16 @@
+.sidebar__filter-link {
+    display: block;
+    font-family: 'Roboto';
+    font-size: 10px;
+    border: 1px solid #C4E7B9;
+    color: #000;
+    text-decoration: none;
+    border-radius: 5px;
+    padding: 10px 8px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+
+    &_active {
+        background: #C4E7B9;
+    }
+}

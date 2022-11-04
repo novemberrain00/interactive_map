@@ -1,0 +1,21 @@
+.option__input {
+    border: 1px solid #EEEEEE;
+    border-radius: 5px;
+    font-size: 14px;
+    padding: 5px;
+    margin: 0 5px;
+    
+    &:first-child {
+        margin-left: 0;
+    }
+
+    &:last-child {
+        margin-right: 0;
+    }
+}
+
+.option__input[type=text] {
+    text-align: center;
+    max-width: 22px;
+    max-height: 22px;
+}

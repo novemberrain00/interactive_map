@@ -1,0 +1,18 @@
+#map {
+    &_drawable {
+        &:hover {
+            cursor: crosshair;
+        }
+    }
+}
+
+.draw-mode-button {
+    position: absolute;
+    right: 30px;
+    top: 150px;
+    background: #fff;
+    border-radius: 5px;
+    border: 1px solid #000;
+    padding: 8px;
+    z-index: 1;
+}
