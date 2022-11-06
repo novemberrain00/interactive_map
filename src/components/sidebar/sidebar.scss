@@ -156,6 +156,7 @@
     }
 
     &__info {
+        width: 265px;
         position: absolute;
         transform: translateX(315%);
 
@@ -202,6 +203,13 @@
         &-value {
             display: block;
             margin-top: 7px;
+        }
+
+        &-alert {
+            font-family: 'Roboto';
+            margin-top: 30px;
+            width: 265px;
+            text-align: center;
         }
 
     }

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import {getData} from '../../services/services';
 
@@ -14,13 +14,12 @@ import DeleteImg from '../../images/delete.svg';
 import Arrow from '../../images/arrow.svg';
 import './sidebar.scss';
 
-const Sidebar = () => {
+const Sidebar = ({polylines, setPolylines, cadNum}) => {
 
     const [isInfoShowed, showInfo] = useState(false);
     const [activeTab, setActiveTab] = useState('options');
     const [requestUrls, setRequestUrls] = useState([]);
     const [geoObjects, setGeoObjects] = useState([]);
-    const [landPlotFilter, setLandPlotFilter] = useState([]);
 
     const classList = isInfoShowed ? 'sidebar__content sidebar__content_moved' : 'sidebar__content';
 
@@ -41,18 +40,32 @@ const Sidebar = () => {
     } 
 
     const getGeoObjects = async () => {
+        setGeoObjects([]);
+        await setPolylines([]);
         if(requestUrls.length > 0) {
+            const curPolylines = []
             for(const url of requestUrls) {
-                console.log(url)
                 await getData(url)
-                .then(data => setGeoObjects(data.features))
+                .then(data => {
+                    setGeoObjects([...geoObjects, ...data.features]);
+                    data.features.forEach(obj => {
+                        curPolylines.push(obj.geometry.coordinates[0]);
+                    });
+                })
                 .catch(err => console.log(err));
+                setPolylines(curPolylines);
             }
             showInfo(true);
         } else {
             alert('Выберите хотя бы 1 фильтр')
         }
     }
+
+    useEffect(()=>{   
+        if(cadNum) { 
+            setNewRequestUrl(`/api/CapitalObject/cadnum?CadNum=${cadNum}`);
+        }
+    }, [cadNum]);
 
     if(activeTab === 'options') {
         filtersClassList = 'sidebar__main-block';
@@ -68,6 +81,9 @@ const Sidebar = () => {
         optionsButtonClassList = 'sidebar__title sidebar__title_active';
     }
 
+    // convertCoords([6915.0,15073.74])
+    // .then(data => console.log(data))
+
     return (
         <aside className='sidebar'>
             <div className={classList}>
@@ -79,14 +95,14 @@ const Sidebar = () => {
                         </div>
                     </header>
                     <div className='sidebar__filters'>
-                        <Filter title="Округи">
+                        <Filter title="Округ">
                             <Minimap/>
                         </Filter>
                         <Filter title="Земельный участок">
-                            <FilterButton text='Участок не оформлен'/>
-                            <FilterButton text='Аварийные'/>
-                            <FilterButton text='Самовольные'/>
-                            <FilterButton text='Несоответствие ВРИ'/>
+                            <FilterButton  callback={() => setNewRequestUrl('/api/LandPlot/list-filter?PropertyType=2&FormalityType=1&Count=10&Offset=1')} text='Участок не оформлен'/>
+                            <FilterButton callback={() => setNewRequestUrl('/api/LandPlot/list-filter?PropertyType=3&FormalityType=1&Count=10&Offset=1')} text='Аварийные'/>
+                            {/* <FilterButton text='Самовольные'/> */}
+                            <FilterButton callback={() => setNewRequestUrl('/api/LandPlot/list-filter?PropertyType=1&FormalityType=1&Count=10&Offset=1')} text='Несоответствие ВРИ'/>
                         </Filter>
                         <Filter title="Собственность">
                             <FilterButton text='Иная'/>
@@ -107,7 +123,7 @@ const Sidebar = () => {
                         </Filter>
                         <Filter title="Остальные фильтры">
                             <FilterButton callback={() => setNewRequestUrl('/api/CapitalObject/list?Count=10&Offset=1')} text='ОКС'/>
-                            <FilterButton text='Стартовые площадки'/>
+                            <FilterButton callback={() => setNewRequestUrl('/api/LaunchPad/list?Count=10&Offset=1')} text='Стартовые площадки'/>
                         </Filter>
                     </div>
                     <footer className='sidebar__footer'>
@@ -190,14 +206,14 @@ const Sidebar = () => {
                         geoObjects.map((obj, i) => {
                             return (
                                 <div key ={i} className='sidebar__info-card'>
-                                    <h2 className='sidebar__title sidebar__info-title'>{obj.properties.data.Name}</h2>
+                                    <h2 className='sidebar__title sidebar__info-title'>{obj.properties.data.Name || 'Неопределено'}</h2>
                                     <div className='sidebar__info-block'>
                                         <h3 className='sidebar__filter-title'>Площадь территории</h3>
                                         <span className='sidebar__info-value'>50 000 м2</span>
                                     </div>
                                     <div className='sidebar__info-block'>
                                         <h3 className='sidebar__filter-title'>Кадастровый номер</h3>
-                                        <span className='sidebar__info-value'>{obj.properties.data.CadNum}</span>
+                                        <span className='sidebar__info-value'>{obj.properties.data.CadNum || 'Неопределено'}</span>
                                     </div>
                                     <div className='sidebar__info-block'>
                                         <h3 className='sidebar__filter-title'>Идентификатор</h3>
@@ -205,7 +221,7 @@ const Sidebar = () => {
                                     </div>
                                     <div className='sidebar__info-block'>
                                         <h3 className='sidebar__filter-title'>Адрес</h3>
-                                        <span className='sidebar__info-value'>{obj.properties.data.Address}</span>
+                                        <span className='sidebar__info-value'>{obj.properties.data.Address  || 'Неопределено'}</span>
                                     </div>
                                     <div className='sidebar__info-block'>
                                         <h3 className='sidebar__filter-title'>Статус</h3>
