@@ -113,7 +113,7 @@ const Sidebar = ({polylines, setPolylines, cadNum}) => {
                         </Filter>
                         <Filter title="Права и обременения">
                             <FilterButton 
-                                callback={() => setNewRequestUrl('/api/CulturalObject/list?Count=10')} 
+                                callback={() => setNewRequestUrl('/api/CulturalObject/list?Count=10&Offset=1')} 
                                 text='Объекты культурного наследия'
                             />
                             <FilterButton 
