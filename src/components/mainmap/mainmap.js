@@ -2,6 +2,8 @@ import React, {useState, useEffect} from 'react';
 
 import { YMaps, Map, ZoomControl, Polyline } from "react-yandex-maps";
 
+import Preloader from '../preloader/preloader';
+
 import DrawModeImg from '../../images/drawMode.svg';
 import './mainmap.scss';
 
@@ -26,6 +28,19 @@ const MainMap = ({polylines}) => {
         }
         
     }; 
+
+    const renderPolylines = () => {
+        if (coordsArr.length < 10 && polylines.length > 0) return <Preloader/>
+
+        return coordsArr.map((coords, i) => {
+            return <Polyline key={i} geometry={coords} options={{
+                balloonCloseButton: false,
+                strokeColor: '#FF1A0F',
+                strokeWidth: 4,
+                strokeOpacity: 0.5
+            }} />
+        });
+    }
 
     useEffect(() => {
         drawPolylines();
@@ -53,14 +68,7 @@ const MainMap = ({polylines}) => {
                 }
                 />
                 {
-                    coordsArr.map((coords, i) => {
-                        return <Polyline key={i} geometry={coords} options={{
-                            balloonCloseButton: false,
-                            strokeColor: '#FF1A0F',
-                            strokeWidth: 4,
-                            strokeOpacity: 0.5
-                        }} />
-                    })
+                    renderPolylines()
                 }
             </Map>
             

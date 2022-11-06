@@ -1,0 +1,26 @@
+@keyframes pulse {
+    0% {
+        transform: scale(1.05);
+    }
+
+    50% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(1.05);
+    }
+}
+
+.preloader {
+    position: absolute;
+    left: 50vw;
+    top: 50vh;
+    transform: translate(-50%, -50%);
+    width: max-content;
+    z-index: 1;
+    background: #fff;
+    padding: 15px;
+    font-family: 'Roboto';
+    animation: pulse 2s infinite;
+}
