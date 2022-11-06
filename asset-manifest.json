@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/interactive_map/static/css/main.8902db63.css",
-    "main.js": "/interactive_map/static/js/main.66b4b664.js",
+    "main.js": "/interactive_map/static/js/main.f24cb825.js",
     "static/media/Roboto-Regular.ttf": "/interactive_map/static/media/Roboto-Regular.fc2b5060f7accec5cf74.ttf",
     "static/media/Nunito-Regular.ttf": "/interactive_map/static/media/Nunito-Regular.99a3b019e7727ac19479.ttf",
     "static/media/Nunito-Bold.ttf": "/interactive_map/static/media/Nunito-Bold.f4338623f94e6079de97.ttf",
@@ -15,10 +15,10 @@
     "static/media/option-closer.svg": "/interactive_map/static/media/option-closer.e9be324f01f3f3d6a089d1d5437b3027.svg",
     "static/media/open-close.svg": "/interactive_map/static/media/open-close.8b9093577932c97b88999a5b187e0565.svg",
     "main.8902db63.css.map": "/interactive_map/static/css/main.8902db63.css.map",
-    "main.66b4b664.js.map": "/interactive_map/static/js/main.66b4b664.js.map"
+    "main.f24cb825.js.map": "/interactive_map/static/js/main.f24cb825.js.map"
   },
   "entrypoints": [
     "static/css/main.8902db63.css",
-    "static/js/main.66b4b664.js"
+    "static/js/main.f24cb825.js"
   ]
 }
