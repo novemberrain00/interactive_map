@@ -6,6 +6,7 @@ import Preloader from '../preloader/preloader';
 
 import DrawModeImg from '../../images/drawMode.svg';
 import './mainmap.scss';
+import { convertCoords } from '../../services/services';
 
 const MainMap = ({polylines}) => {
     const [coordsArr, setCoordsArr] = useState([]);
@@ -17,8 +18,7 @@ const MainMap = ({polylines}) => {
             let curCoordsArray = [];
             for(let line of polyline) {
                 for(let coords of line) {
-                    await fetch(`https://178.170.242.254:14235/api/СonvertCoordinates/convert?X=${coords[0]}&Y=${coords[1]}&SourceSc=EPSG%3A6335000&DestSc=WGS84&DestRound=false`)
-                    .then(data => data.json())
+                    await convertCoords(coords[0], coords[1])
                     .then(data => curCoordsArray.push(data.destGeoJson.features[0].geometry.coordinates.reverse()));
                 }
                 const coordsArrRef = coordsArr;
