@@ -24,3 +24,15 @@
     font-family: 'Roboto';
     animation: pulse 2s infinite;
 }
+
+@media screen and (max-width: 768px){
+    .preloader {
+        left: 25vw;
+    }
+}
+
+@media screen and (max-width: 768px){
+    .preloader {
+        left: 15vw;
+    }
+}

@@ -1,14 +1,42 @@
-import React from 'react';
-
 const getData = async (url) => {
-    const basicUrl = 'https://178.170.242.254:14235';
+    const basicUrl = 'http://178.170.242.254:5223';
     const result =  await fetch(basicUrl+url);
     return result.json();
 }
 
-const convertCoords = async (x, y) => {
-    const result =  await fetch(`https://178.170.242.254:14235/api/СonvertCoordinates/convert?X=${x}&Y=${y}&SourceSc=EPSG%3A6335000&DestSc=WGS84`);
+const postData = async (url, data) => {
+    const basicUrl = 'http://178.170.242.254:5223';
+    const result =  await fetch(basicUrl+url, {
+        method: "POST",
+        headers: {
+            Accept: "*/*",
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+
+    return result.json();
+}
+
+const createFile = async (data) =>{
+    const url = 'http://178.170.242.254:5223/api/Document/create';
+
+    const result = await fetch(url, {
+        method: "POST",
+        headers: {
+            Accept: "*/*",
+            'Content-Type': 'text/json; charset=utf-8"',
+            'Content-Disposition': 'attachment; filename="cool.html"'
+        },
+        body: JSON.stringify(data)
+    });
+
+    return result.text();
+}
+
+const convertCoords = async (x, y, from, to) => {
+    const result =  await fetch(`http://178.170.242.254:5223/api/СonvertCoordinates/convert?X=${x}&Y=${y}&SourceSc=${from}&DestSc=${to}`);
     return result.json();
 }   
 
-export {convertCoords, getData};
+export {convertCoords, postData, getData, createFile};
