@@ -1,5 +1,11 @@
 @import './filter-variables.scss';
 
+@font-face {
+    font-family: 'Roboto';
+    src: url('../../fonts/Roboto/Roboto-Regular.ttf');
+    font-weight: 400;
+}
+
 .sidebar__filter {
     position: relative;
     margin-top: 20px;
@@ -24,8 +30,9 @@
     &-title {
         display: flex;
         align-items: center;
-        font-size: 12px;
-        font-family: Roboto, sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        font-family: 'Roboto', sans-serif;
         color: $info-text-color;
         margin: 0;
 
@@ -40,8 +47,8 @@
         flex-wrap: wrap;
         margin-top: 10px;
         overflow: hidden;
-        max-height: 1000px;
-        transition: .8s ease;
+        max-height: 100px;
+        transition: .8s;
 
         &_closed {
             max-height: 0px;

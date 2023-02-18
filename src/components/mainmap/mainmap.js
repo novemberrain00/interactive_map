@@ -12,7 +12,7 @@ const MainMap = ({setIndustrialModels, polylines}) => {
     const [customCoords, setCustomCoords] = useState([]);
     const [mapDrawMode, setDrawMode] = useState(false);
 
-    const buttonClassList = mapDrawMode ? 'switcher switcher_active' : 'switcher';
+    const buttonClassList = mapDrawMode ? 'toolbar__button toolbar__button_active' : 'toolbar__button';
 
     const submitPolygons = async () => {
         let convertedCoords = [];
@@ -68,7 +68,7 @@ const MainMap = ({setIndustrialModels, polylines}) => {
     };
 
     const polygonSubmitter = customCoords.length < 3 ? null : 
-    <button onClick={() => submitPolygons()} style={{top: '190px'}} className='switcher'>Найти</button> 
+    <button onClick={() => submitPolygons()} style={{top: '190px'}} className='toolbar__button'>Найти</button> 
 
     useEffect(() => {
         drawPolylines();
@@ -90,6 +90,7 @@ const MainMap = ({setIndustrialModels, polylines}) => {
             >
                 <ZoomControl options={
                     {
+                        size: 'small',
                         position: {
                             top: "40vh",
                             right: "40px"
@@ -102,11 +103,14 @@ const MainMap = ({setIndustrialModels, polylines}) => {
                     strokeColor: '#FF1A0F',
                     strokeWidth: 4,
                     strokeOpacity: 0.5
-                }} />          
-                <button onClick={() => setDrawMode(!mapDrawMode)} className={buttonClassList}>
-                    <img src={DrawModeImg} alt='рисовать'/>
-                </button>    
-                <button onClick={()=> setCustomCoords([])} style={{top: '120px'}} className='switcher'>Clear</button>                                     
+                }} />       
+                <div className='toolbar'>
+                    <button onClick={()=> setCustomCoords([])} className='toolbar__button'>Clear</button>
+                    <button onClick={() => setDrawMode(!mapDrawMode)} className={buttonClassList}>
+                        <img src={DrawModeImg} alt='рисовать'/>
+                    </button>          
+                    {polygonSubmitter}
+                </div>                                      
                 {polygonSubmitter}
                 {renderPolylines()}
             </Map>

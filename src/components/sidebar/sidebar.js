@@ -5,7 +5,10 @@ import {getData, postData, createFile} from '../../services/services';
 import Filter from '../filter/filter';
 import FilterButton from '../filterButton/filterButton';
 import Button from '../button/button';
+import OptionInput from '../optionInput/optionInput';
+import Option from '../option/option';
 
+import PercentImg from '../../images/percent.svg';
 import Arrow from '../../images/arrow.svg';
 import './sidebar.scss';
 
@@ -16,11 +19,17 @@ const Sidebar = ({industrialModels, isSidebarOpened, setPolylines, cadNum}) => {
     const [geoObjects, setGeoObjects] = useState([]);
     const [mustSendRequest, setMustSendRequest] = useState(true);
     const [recomends, setRecomends] = useState({});
+    const [activeTab, setActiveTab] = useState('options');
     const [buttonText, setButtonText] = useState('Найти');
     const [industrials, setIndustrials] = useState([]);
 
     const classList = isInfoShowed ? 'sidebar__content sidebar__content_moved' : 'sidebar__content';
     const sidebarClassList = isSidebarOpened ? 'sidebar' : 'sidebar sidebar_closed';
+
+    let filtersClassList,
+        optionsClassList,
+        filtersButtonClassList,
+        optionsButtonClassList;
 
     const setNewRequestUrl = (url) => {
         if(requestUrls.includes(url)) {
@@ -42,13 +51,17 @@ const Sidebar = ({industrialModels, isSidebarOpened, setPolylines, cadNum}) => {
             return false;
         }
 
+        setGeoObjects([]);
+
         if(requestUrls.length > 0) {
             const curPolylines = [];
+            const curObjects = [];
+
             setButtonText('...');
             for(const url of requestUrls) {
                 await getData(url)
                 .then(data => {
-                    setGeoObjects([...geoObjects, ...data.features]);
+                    curObjects.push(...data.features)
                     data.features.forEach(obj => {
                         curPolylines.push(obj.geometry.coordinates[0]);
                     });
@@ -57,6 +70,7 @@ const Sidebar = ({industrialModels, isSidebarOpened, setPolylines, cadNum}) => {
                 setPolylines(curPolylines);
             }
 
+            setGeoObjects(curObjects);
             showInfo(true);
         } else {
             alert('Выберите хотя бы 1 фильтр')
@@ -75,63 +89,60 @@ const Sidebar = ({industrialModels, isSidebarOpened, setPolylines, cadNum}) => {
         });
     };
 
+    const generateFile = async (obj) => {
+        await createFile({industrialModels: [obj]})
+        .then(data => {
+            var a = document.createElement("a");
+            a.href = URL.createObjectURL(data);
+            a.download = 'file.docx';
+            a.click();
+        });
+    }
+
     const renderIndustrials = () => {
         return industrials.map((ind, i) => {
             return (
                 <div key ={i} className='sidebar__info-card'>
                     {/* <h2 className='sidebar__title sidebar__info-title'>{ind.properties.data.Name || 'Название отсутствует'}</h2> */}
                     <div className='sidebar__info-block'>
-                        <h3 className='sidebar__filter-title'>Соответствие ИК</h3>
+                        <h3 style={{fontWeight: 'bold'}} className='sidebar__filter-title'>Соответствие ИК</h3>
                         <span className='sidebar__info-value'>{ind.percent || 'Загрузка...'}</span>
                     </div> 
                     <div className='sidebar__info-block'>
-                        <h3 className='sidebar__filter-title'>Рекомендация</h3>
+                        <h3 style={{fontWeight: 'bold'}} className='sidebar__filter-title'>Рекомендация</h3>
                         <span className='sidebar__info-value'>{ind.recommendation || 'Загрузка...'}</span>
                     </div> 
                     <div className='sidebar__info-block'>
-                        <h3 className='sidebar__filter-title'>Кадастровый номер</h3>
+                        <h3 style={{fontWeight: 'bold'}} className='sidebar__filter-title'>Кадастровый номер</h3>
                         <span className='sidebar__info-value'>{ind.houseModel.cadNum}</span>
                     </div> 
                     <div className='sidebar__info-block'>
-                        <h3 className='sidebar__filter-title'>Год постройки</h3>
+                        <h3 style={{fontWeight: 'bold'}} className='sidebar__filter-title'>Год постройки</h3>
                         <span className='sidebar__info-value'>{ind.houseModel.yearCreate || 'Загрузка...'}</span>
                     </div> 
                     <div className='sidebar__info-block'>
-                        <h3 className='sidebar__filter-title'>Состояние</h3>
+                        <h3 style={{fontWeight: 'bold'}} className='sidebar__filter-title'>Состояние</h3>
                         <span className='sidebar__info-value'>{ind.houseModel.emergency ? 'Аварийный' : 'Штатный'}</span>
                     </div> 
                     <div className='sidebar__info-block'>
-                        <h3 className='sidebar__filter-title'>Проводилась ли реновация</h3>
+                        <h3 style={{fontWeight: 'bold'}} className='sidebar__filter-title'>Проводилась ли реновация</h3>
                         <span className='sidebar__info-value'>{ind.houseModel.isRenovation ? 'Да' : 'Нет'}</span>
                     </div> 
                     <div className='sidebar__info-block'>
-                        <h3 className='sidebar__filter-title'>Год реновации</h3>
+                        <h3 style={{fontWeight: 'bold'}} className='sidebar__filter-title'>Год реновации</h3>
                         <span className='sidebar__info-value'>{ind.houseModel.yearRenovation || 'Дом не подлежал реновации'}</span>
                     </div> 
                     <div className='sidebar__info-block'>
-                        <h3 className='sidebar__filter-title'>Площадь</h3>
+                        <h3 style={{fontWeight: 'bold'}} className='sidebar__filter-title'>Площадь</h3>
                         <span className='sidebar__info-value'>{ind.houseModel.area}</span>
                     </div> 
-                    <div className='sidebar__info-block'>=
-                        <span className='sidebar__info-value'>Скачать файл с рекомендациями</span>
+                    <div className='sidebar__info-block'>
+                        <span style={{color: "rgb(0 71 255)"}} onClick={() => generateFile(ind)} className='sidebar__filter-title'>Скачать файл</span>
                     </div> 
                 </div>
 
             )
         })
-    }
-
-    const generateFile = async (obj) => {
-        await createFile({industrialModels: [obj]})
-        .then(data => {
-            let file = new Blob([data], {
-                type: 'application/msword'
-            });
-            var a = document.createElement("a");
-            a.href = URL.createObjectURL(file);
-            a.download = 'file.docx';
-            a.click();
-        });
     }
 
     useEffect(()=>{   
@@ -148,14 +159,32 @@ const Sidebar = ({industrialModels, isSidebarOpened, setPolylines, cadNum}) => {
         } 
     }, [cadNum, industrialModels]);
 
+    if(activeTab === 'options') {
+        filtersClassList = 'sidebar__main-block';
+        filtersButtonClassList = 'sidebar__title sidebar__title_active';
+
+        optionsClassList = 'sidebar__options_hidden';
+        optionsButtonClassList = 'sidebar__title';
+    } else {
+        filtersClassList = 'sidebar__main-block sidebar__main-block_hidden';
+        filtersButtonClassList = 'sidebar__title sidebar__title';
+
+        optionsClassList = 'sidebar__options';
+        optionsButtonClassList = 'sidebar__title sidebar__title_active';
+    }
+
+
     return (
         <aside style={{overflowY: isInfoShowed ? 'auto' : 'hidden'}} className={sidebarClassList}>
             <div className={classList}>
                 <div>
                     <header className='sidebar__header'>
-                        <h3 className='sidebar__title'>Cлои</h3>
+                    <div className='sidebar__header-content'>
+                            <h3 onClick={() => setActiveTab('options')} className={filtersButtonClassList}>слои</h3>
+                            <h3 onClick={() => setActiveTab('filters')} className={optionsButtonClassList}>настройки</h3>
+                        </div>
                     </header>
-                    <div className='sidebar__filters'>
+                    <div className={filtersClassList}>
                         <Filter title="Земельный участок">
                             <FilterButton  callback={() => setNewRequestUrl('/api/LandPlot/list-filter?FormalityType=0&Count=10&Offset=1')} text='Участок не оформлен'/>
                             <FilterButton callback={() => setNewRequestUrl('/api/LandPlot/list-filter?EmergencyBuilding=true&Count=10&Offset=1')} text='Аварийные'/>
@@ -187,6 +216,48 @@ const Sidebar = ({industrialModels, isSidebarOpened, setPolylines, cadNum}) => {
                             <Button text={buttonText} classList='sidebar__footer-btn' callback={() => getGeoObjects()}/>
                         </footer>
                     </div>
+                    <div className={optionsClassList}>
+                        <h2 className='sidebar__option-title'>Базовые критерии</h2>
+                        <h4 className='sidebar__option-subtitle'>Жилое</h4>
+                        <Option title='Аварийные'>
+                            <OptionInput placeholder={'20'} type="text"/>
+                            <img src={PercentImg} alt="percent" className='sidebar__option-icon'/>
+                        </Option>
+                        <Option title='Не соответствует ВРИ'>
+                            <OptionInput placeholder={'40'} type="text"/>
+                            <img src={PercentImg} alt="percent" className='sidebar__option-icon'/>
+                        </Option>
+                        <Option title='Самовольные объекты'>
+                            <OptionInput placeholder={'40'} type="text"/>
+                            <img src={PercentImg} alt="percent" className='sidebar__option-icon'/>
+                        </Option>
+                        <h4 className='sidebar__option-subtitle'>Количество рабочих мест</h4>
+                        <Option title='До 100'>
+                            <OptionInput placeholder={'50'} type="text"/>
+                            <img src={PercentImg} alt="percent" className='sidebar__option-icon'/>
+                        </Option>
+                        <Option title='100-1000'>
+                            <OptionInput placeholder={'30'}  type="text"/>
+                            <img src={PercentImg} alt="percent" className='sidebar__option-icon'/>
+                        </Option>
+                        <Option title='Не меньше 1000'>
+                            <OptionInput placeholder={'20'}  type="text"/>
+                            <img src={PercentImg} alt="percent" className='sidebar__option-icon'/>
+                        </Option>
+                        <h4 className='sidebar__option-subtitle'>Права и обременения</h4>
+                        <Option title='Аренда'>
+                            <OptionInput placeholder={'60'} type="text"/>
+                            <img src={PercentImg} alt="percent" className='sidebar__option-icon'/>
+                        </Option>
+                        <Option title='СЗЗ'>
+                            <OptionInput placeholder={'20'}  type="text"/>
+                            <img src={PercentImg} alt="percent" className='sidebar__option-icon'/>
+                        </Option>
+                        <Option title='Объекты культурного наследия'>
+                            <OptionInput placeholder={'20'} type="text"/>
+                            <img src={PercentImg} alt="percent" className='sidebar__option-icon'/>
+                        </Option>
+                    </div>
                 </div>
                 <div className='sidebar__info'>
                     <h2 onClick={() => showInfo(false)} className='sidebar__info-header'>
@@ -213,15 +284,15 @@ const Sidebar = ({industrialModels, isSidebarOpened, setPolylines, cadNum}) => {
                                     {
                                     Object.keys(recomends).length > 0 && <>
                                         <div className='sidebar__info-block'>
-                                            <h3 className='sidebar__filter-title'>Соответствие ИК</h3>
+                                            <h3 style={{fontWeight: 'bold'}}className='sidebar__filter-title'>Соответствие ИК</h3>
                                             <span className='sidebar__info-value'>{recomends.percent || 'Не найдено'}</span>
                                         </div> 
                                         <div className='sidebar__info-block'>
-                                            <h3 className='sidebar__filter-title'>Рекомендация</h3>
+                                            <h3 style={{fontWeight: 'bold'}}className='sidebar__filter-title'>Рекомендация</h3>
                                             <span className='sidebar__info-value'>{recomends.recommendation || 'Отсутствует'}</span>
                                         </div> 
                                         <div className='sidebar__info-block'>
-                                            <h3 className='sidebar__filter-title'>Год постройки</h3>
+                                            <h3 style={{fontWeight: 'bold'}}className='sidebar__filter-title'>Год постройки</h3>
                                             <span className='sidebar__info-value'>{recomends.houseModel.yearCreate || 'Не найден'}</span>
                                         </div> 
                                         <div className='sidebar__info-block'>
@@ -229,19 +300,19 @@ const Sidebar = ({industrialModels, isSidebarOpened, setPolylines, cadNum}) => {
                                             <span className='sidebar__info-value'>{recomends.houseModel.emergency ? 'Аварийный' : 'Штатный'}</span>
                                         </div> 
                                         <div className='sidebar__info-block'>
-                                            <h3 className='sidebar__filter-title'>Проводилась ли реновация</h3>
+                                            <h3 style={{fontWeight: 'bold'}} className='sidebar__filter-title'>Проводилась ли реновация</h3>
                                             <span className='sidebar__info-value'>{recomends.houseModel.isRenovation ? 'Да' : 'Нет'}</span>
                                         </div> 
                                         <div className='sidebar__info-block'>
-                                            <h3 className='sidebar__filter-title'>Год реновации</h3>
+                                            <h3 style={{fontWeight: 'bold'}}className='sidebar__filter-title'>Год реновации</h3>
                                             <span className='sidebar__info-value'>{recomends.houseModel.yearRenovation || 'Дом не подлежит реновации'}</span>
                                         </div> 
                                         <div className='sidebar__info-block'>
-                                            <h3 className='sidebar__filter-title'>Площадь</h3>
+                                            <h3 style={{fontWeight: 'bold'}}className='sidebar__filter-title'>Площадь</h3>
                                             <span className='sidebar__info-value'>{recomends.houseModel.area}</span>
                                         </div> 
                                         <div className='sidebar__info-block'>
-                                            <h3 onClick={() => generateFile(recomends)} className='sidebar__filter-title'>Скачать файл</h3>
+                                            <h3 style={{color: "rgb(0 71 255)"}} onClick={() => generateFile(recomends)} className='sidebar__filter-title'>Скачать файл</h3>
                                         </div> 
                                     </>
                                     }

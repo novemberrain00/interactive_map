@@ -40,7 +40,7 @@
     left: 0;
     top: 0;
     bottom: 0;
-    max-width: 320px;
+    width: 320px;
     padding: 25px 15px;
     background: #fff;
     overflow-y: auto;
@@ -50,7 +50,7 @@
 
 
     &_closed {
-        transform: translateX(-120%);
+        transform: translateX(-75%);
     }
 
     &__content {
@@ -84,12 +84,38 @@
         }
     }
 
+    &__options {
+        height: max-content;
+        width: 100%;
+
+        &_hidden {
+            display: none;
+        }
+
+        &-submit {
+            display: block;
+            margin: 64px auto 25px;
+        }
+    }
+
+    &__option {
+        &-title {
+            font-family: 'Roboto';
+            font-weight: bold;
+        }
+
+        &-subtitle {
+            font-family: 'Roboto';
+            font-weight: bold;
+        }
+    }
+
 
     &__title {
         font-family: "Roboto";
         font-weight: 400;
-        font-size: 24px;
-        padding: 5px 0;
+        font-size: 14px;
+        padding: 5px 28px;
         margin: 0;
         border-radius: 5px;
 
@@ -201,15 +227,13 @@
         left: 360px;
 
         .hamburger__part:first-child {
-            transform: rotate(45deg);
-        }
-
-        .hamburger__part:nth-child(2n) {
-            display: none;
+            transform: rotate(-35deg) translate(0px, -4px);
+            width: 60%;
         }
 
         .hamburger__part:last-child {
-            transform: rotate(-45deg);
+            transform: rotate(35deg) translate(0px, 3px);
+            width: 60%;
         }
     }
 

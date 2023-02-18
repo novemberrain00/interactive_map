@@ -31,7 +31,7 @@ const createFile = async (data) =>{
         body: JSON.stringify(data)
     });
 
-    return result.text();
+    return result.blob();
 }
 
 const convertCoords = async (x, y, from, to) => {

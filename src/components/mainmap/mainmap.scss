@@ -6,20 +6,30 @@
     }
 }
 
-.switcher {
+.toolbar {
     position: absolute;
+    display: flex;
+    flex-direction: column;
     right: 35px;
     top: 150px;
-    background: #fff;
-    border: 1px solid #000;
-    border-radius: 5px;
-    z-index: 10;
 
-    &_active {
-        box-shadow: inset 0 0 10px -1px #000;
-    }
+    &__button {
+        display: block;
+        width: 45px;
+        height: 45px;
+        margin-bottom: 5px;
+        background: #fff;
+        box-shadow: 0 0 8px -3px #000;
+        border: none;
+        border-radius: 5px;
+        z-index: 10;
 
-    &:hover {
-        cursor: pointer;
+        &_active {
+            box-shadow: inset 0 0 7px -1px #000;
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
     }
 }
